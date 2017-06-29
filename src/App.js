@@ -1,18 +1,29 @@
 import React, { Component } from 'react';
-import logo from './imgs/logo.svg';
+import CharactersTable from './components/CharactersTable';
+import Header from './components/Header';
+import {createStore,applyMiddleware} from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import {characters} from './reducers/characters';
 import './css/App.css';
+
+const peopleStore = createStore(characters, applyMiddleware(thunkMiddleware));
+const planetStore = createStore(characters, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <Header title={"Star Wars"}/>
+        <div className="App-intro">
+        <br/>
+          <input className="App-search-box"
+                 type="text"
+                 name="searchBox"
+                 placeholder="Type here your favorite character"
+                 autoFocus/>
+
+          <CharactersTable peopleStore={peopleStore} planetStore={planetStore}/>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
   }
