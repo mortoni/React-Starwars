@@ -3,13 +3,22 @@ import Header from './Header';
 import {browserHistory} from 'react-router';
 
 export default class Details extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {character: this.props.location.state.character , planets : []};
+    this.state = {
+      character: this.props.location.state.character ,
+      planets : this.props.location.state.planets
+    };
   }
 
   getPlanetName() {
-    return '';
+    return this.state.planets.find((planet) => {
+        return planet.url === this.state.character.homeworld;
+      }).name;
+  }
+
+  comment() {
+    //dispatch
   }
 
   goHome() {
@@ -64,17 +73,17 @@ export default class Details extends Component {
 
                   <tr>
                     <td>Planet</td>
-                    <td>this.getPlanetName()</td>
+                    <td>{this.getPlanetName()}</td>
                   </tr>
 
                   <tr>
                     <td>Rate</td>
-                    <td>0</td>
+                    <td>{this.state.character.rate}</td>
                   </tr>
 
                   <tr>
                     <td>Comments</td>
-                    <td>0</td>
+                    <td>{this.state.character.comments.length}</td>
                   </tr>
                 </tbody>
               </table>

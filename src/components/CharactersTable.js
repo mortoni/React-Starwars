@@ -20,8 +20,17 @@ export default class CharactersTable extends Component {
   }
 
   componentDidMount(){
-    this.Peopleloader();
-    this.Planetloader();
+    if(this.props.peopleStore.getState().length === 0){
+      this.Peopleloader();
+    } else {
+      this.props.peopleStore.dispatch(swapi.addPeople(this.props.peopleStore.getState()));
+    }
+
+    if(this.props.planetStore.getState().length === 0){
+      this.Planetloader();
+    } else {
+      this.props.planetStore.dispatch(swapi.addPlanet(this.props.planetStore.getState()));
+    }
   }
 
   Planetloader(){
@@ -74,6 +83,10 @@ export default class CharactersTable extends Component {
       })
       .then((p) => {
         for (var i = 0; i < p.length; i++) {
+          p[i].results.forEach((pe) => {
+            pe.comments = [];
+            pe.rate = 0;
+          });
           people = people.concat(p[i].results);
         }
         this.props.peopleStore.dispatch(swapi.addPeople(people));
@@ -81,45 +94,38 @@ export default class CharactersTable extends Component {
   }
 
   getPlanetName(char) {
-    let str = ''
-    if(this.state.planets.length > 0) {
-      this.state.planets.forEach((planet) => {
-        if(char.homeworld === planet.url) {
-          str = planet.name;
-        }
-      });
-
-      return str;
-    }
+    return this.state.planets.find((planet) => {
+        return planet.url === char.homeworld;
+      }).name;
   }
 
   selectChar = (char) => {
     browserHistory.push({
       pathname: char.name+'/details',
-      state: { character: char }
+      state: { character: char, planets: this.state.planets}
     });
   }
 
   render(){
-        if("undefined" === typeof this.state.people) return null;
+    if(this.state.people.length === 0 || this.state.planets.length === 0) return null;
 
-        return (
-          <table className="App-character-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Planet</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.people.map(char =>
-                <tr key={char.name} className="border_bottom" onClick={()=>this.selectChar(char)}>
-                  <td>{char.name}</td>
-                  <td>{this.getPlanetName(char)}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        );
-    }
+    return (
+      <table className="App-character-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Planet</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.people.map(char =>
+            <tr key={char.name} className="border_bottom" onClick={()=>this.selectChar(char)}>
+              <td>{char.name}</td>
+              <td>{this.getPlanetName(char)}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    );
+  }
 }
