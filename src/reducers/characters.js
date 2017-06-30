@@ -3,9 +3,5 @@ export function characters(state=[],action) {
     return action.people;
   }
 
-  if (action.type === 'ADD_PLANETS') {
-    return action.planets;
-  }
-
   return state;
 }

@@ -7,7 +7,7 @@ export default class Details extends Component {
     super(props);
     this.state = {
       character: this.props.location.state.character ,
-      planets : this.props.location.state.planets
+      planets: this.props.location.state.planets
     };
   }
 
@@ -15,6 +15,14 @@ export default class Details extends Component {
     return this.state.planets.find((planet) => {
         return planet.url === this.state.character.homeworld;
       }).name;
+  }
+
+  upVote() {
+    let test = this.props;
+  }
+
+  downVote() {
+
   }
 
   comment() {
@@ -92,7 +100,7 @@ export default class Details extends Component {
             <div className="character-comment-box">
               <textarea name="comment" className="comment-box"/>
               <button>Post Comment</button>
-              <button>Upvote</button>
+              <button onClick={()=>this.upVote()}>Upvote</button>
               <button>Downvote</button>
               <button className="left" onClick={()=>this.goHome()}>Back</button>
             </div>

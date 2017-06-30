@@ -102,7 +102,10 @@ export default class CharactersTable extends Component {
   selectChar = (char) => {
     browserHistory.push({
       pathname: char.name+'/details',
-      state: { character: char, planets: this.state.planets}
+      state: {
+        character: char,
+        planets: this.state.planets
+      }
     });
   }
 

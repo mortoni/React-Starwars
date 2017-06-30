@@ -4,10 +4,11 @@ import Header from './components/Header';
 import {createStore,applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import {characters} from './reducers/characters';
+import {planets} from './reducers/planets';
 import './css/App.css';
 
 const peopleStore = createStore(characters, applyMiddleware(thunkMiddleware));
-const planetStore = createStore(characters, applyMiddleware(thunkMiddleware));
+const planetStore = createStore(planets, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
   render() {
