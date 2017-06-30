@@ -85,7 +85,8 @@ export default class CharactersTable extends Component {
         for (var i = 0; i < p.length; i++) {
           p[i].results.forEach((pe) => {
             pe.comments = [];
-            pe.rate = 0;
+            pe.upvote = 0;
+            pe.downvote = 0;
           });
           people = people.concat(p[i].results);
         }
@@ -99,12 +100,14 @@ export default class CharactersTable extends Component {
       }).name;
   }
 
-  selectChar = (char) => {
+  selectChar = (index) => {
     browserHistory.push({
-      pathname: char.name+'/details',
+      pathname: this.state.people[index].name + '/details',
       state: {
-        character: char,
-        planets: this.state.planets
+        selected: index,
+        people: this.state.people,
+        planets: this.state.planets,
+        peopleStore: this.props.peopleStore
       }
     });
   }
@@ -121,8 +124,8 @@ export default class CharactersTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.people.map(char =>
-            <tr key={char.name} className="border_bottom" onClick={()=>this.selectChar(char)}>
+          {this.state.people.map((char, index) =>
+            <tr key={char.name} className="border_bottom" onClick={()=>this.selectChar(index)}>
               <td>{char.name}</td>
               <td>{this.getPlanetName(char)}</td>
             </tr>
