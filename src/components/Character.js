@@ -22,14 +22,18 @@ export default class Character extends Component {
   }
 
   componentWillMount() {
-    this.props.location.state.peopleStore.subscribe(() => {
-      this.setState({ people : this.props.location.state.peopleStore.getState() });
-    });
+    try {
+      this.props.location.state.peopleStore.subscribe(() => {
+        this.setState({ people : this.props.location.state.peopleStore.getState() });
+      });
+    } catch (e) {
+      this.goHome();
+    }
   }
 
   getPlanetName() {
     return this.state.planets.find((planet) => {
-        return planet.url === this.state.people[this.state.selected].homeworld;
+        return planet.url === this.state.people[this.getIndex()].homeworld;
       }).name;
   }
 
@@ -44,7 +48,7 @@ export default class Character extends Component {
   postComment(selected) {
     const comment = this.state.comment;
     this.state.peopleStore.dispatch({type:'POST_COMMENT', selected, comment});
-    this.state.comment = '';
+    this.setState({ comment : '' });
   }
 
   goHome() {
@@ -53,9 +57,15 @@ export default class Character extends Component {
     });
   }
 
+  getIndex() {
+    return this.state.people.findIndex((p) => {
+      return p.name === this.state.selected.name;
+    });
+  }
+
   getRate() {
-    const up = this.state.people[this.state.selected].upvote;
-    const down = this.state.people[this.state.selected].downvote;
+    const up = this.state.people[this.getIndex()].upvote;
+    const down = this.state.people[this.getIndex()].downvote;
 
     if(up === 0) {
       return 0;
@@ -69,47 +79,47 @@ export default class Character extends Component {
 
       return (
         <div className="Details">
-          <Header title={this.state.people[this.state.selected].name}></Header>
+          <Header title={this.state.people[this.getIndex()].name}></Header>
 
           <Grid fluid>
             <Row>
               <Col xs={12} md={8}>
-                <div className="details-box">
-                  <table className="Details-character-table">
+                <div className="Character-box">
+                  <table className="Character-table">
                     <tbody>
                       <tr>
                         <td>Height</td>
-                        <td>{this.state.people[this.state.selected].height}</td>
+                        <td>{this.state.people[this.getIndex()].height}</td>
                       </tr>
 
                       <tr>
                         <td>Mass</td>
-                        <td>{this.state.people[this.state.selected].mass}</td>
+                        <td>{this.state.people[this.getIndex()].mass}</td>
                       </tr>
 
                       <tr>
                         <td>Hair Color</td>
-                        <td>{this.state.people[this.state.selected].hair_color}</td>
+                        <td>{this.state.people[this.getIndex()].hair_color}</td>
                       </tr>
 
                       <tr>
                         <td>Skin Color</td>
-                        <td>{this.state.people[this.state.selected].skin_color}</td>
+                        <td>{this.state.people[this.getIndex()].skin_color}</td>
                       </tr>
 
                       <tr>
                         <td>Eye Color</td>
-                        <td>{this.state.people[this.state.selected].eye_color}</td>
+                        <td>{this.state.people[this.getIndex()].eye_color}</td>
                       </tr>
 
                       <tr>
                         <td>Birth Year</td>
-                        <td>{this.state.people[this.state.selected].birth_year}</td>
+                        <td>{this.state.people[this.getIndex()].birth_year}</td>
                       </tr>
 
                       <tr>
                         <td>Gender</td>
-                        <td>{this.state.people[this.state.selected].gender}</td>
+                        <td>{this.state.people[this.getIndex()].gender}</td>
                       </tr>
 
                       <tr>
@@ -124,27 +134,27 @@ export default class Character extends Component {
 
                       <tr>
                         <td>Comments</td>
-                        <td>{this.state.people[this.state.selected].comments.length}</td>
+                        <td>{this.state.people[this.getIndex()].comments.length}</td>
                       </tr>
                     </tbody>
                   </table>
 
-                  <div className="details-footer">
-                    <button onClick={()=>this.upVote(this.state.selected)}>Upvote</button>
-                    <button onClick={()=>this.downVote(this.state.selected)}>Downvote</button>
+                  <div className="Character-footer">
+                    <button onClick={()=>this.upVote(this.getIndex())}>Upvote</button>
+                    <button onClick={()=>this.downVote(this.getIndex())}>Downvote</button>
                     <button className="left" onClick={()=>this.goHome()}>Back</button>
                   </div>
                 </div>
               </Col>
 
               <Col xs={12} md={4}>
-                <div className="details-box">
+                <div className="Character-box">
                   <textarea name="comment" className="comment-box" value={this.state.comment} onChange={this.handleChange}/>
-                  <button onClick={()=>this.postComment(this.state.selected)}>Post Comment</button>
+                  <button onClick={()=>this.postComment(this.getIndex())}>Post Comment</button>
                 </div>
 
-                <div className="details-box">
-                  {this.state.people[this.state.selected].comments.map((comment, index) =>
+                <div className="Character-box">
+                  {this.state.people[this.getIndex()].comments.map((comment, index) =>
                     <div key={index} className="blockquote">
                       <p>{comment}</p>
                     </div>

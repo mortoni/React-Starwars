@@ -6,7 +6,13 @@ export default class CharactersTable extends Component {
 
   constructor(props){
     super(props);
-    this.state = { people : [], planets : [] };
+    this.state = {
+      people : [],
+      planets : [],
+      search : ''
+    };
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentWillMount(){
@@ -17,23 +23,28 @@ export default class CharactersTable extends Component {
     this.props.planetStore.subscribe(() => {
       this.setState({ planets : this.props.planetStore.getState() });
     });
+
   }
 
   componentDidMount(){
     if(this.props.peopleStore.getState().length === 0){
-      this.Peopleloader();
+      this.peopleLoader();
     } else {
       this.props.peopleStore.dispatch(swapi.addPeople(this.props.peopleStore.getState()));
     }
 
     if(this.props.planetStore.getState().length === 0){
-      this.Planetloader();
+      this.planetLoader();
     } else {
       this.props.planetStore.dispatch(swapi.addPlanet(this.props.planetStore.getState()));
     }
   }
 
-  Planetloader(){
+  handleChange(event) {
+    this.setState({ search: event.target.value });
+  }
+
+  planetLoader(){
     let urlPlanets = 'http://swapi.co/api/planets/?page=';
     let promises = [];
     let planets = [];
@@ -61,7 +72,7 @@ export default class CharactersTable extends Component {
       });
   }
 
-  Peopleloader(){
+  peopleLoader(){
     let urlPeople = 'http://swapi.co/api/people/?page=';
     let promises = [];
     let people = [];
@@ -96,15 +107,15 @@ export default class CharactersTable extends Component {
 
   getPlanetName(char) {
     return this.state.planets.find((planet) => {
-        return planet.url === char.homeworld;
-      }).name;
+      return planet.url === char.homeworld;
+    }).name;
   }
 
-  selectChar = (index) => {
+  selectChar = (char) => {
     browserHistory.push({
-      pathname: this.state.people[index].name + '/details',
+      pathname: char.name + '/details',
       state: {
-        selected: index,
+        selected: char,
         people: this.state.people,
         planets: this.state.planets,
         peopleStore: this.props.peopleStore
@@ -112,26 +123,58 @@ export default class CharactersTable extends Component {
     });
   }
 
+  getRate(char) {
+    if(char.upvote === 0) {
+      return 0;
+    } else {
+      return Math.trunc((char.upvote / (char.upvote + char.downvote)) * 100);
+    }
+  }
+
+  filterByName(char) {
+    if(this.state.search.length > 0) {
+      return char.name.toLowerCase().includes(this.state.search.toLowerCase());
+    }
+
+    return true;
+  }
+
   render(){
     if(this.state.people.length === 0 || this.state.planets.length === 0) return null;
 
+    const items = this.state.people
+            .sort((a, b) => this.getRate(a) - this.getRate(b))
+            .filter((char) => {return this.filterByName(char)})
+            .reverse()
+            .map((char) =>
+              <tr key={char.name} className="border_bottom" onClick={ ()=>this.selectChar(char) }>
+                <td>{char.name}</td>
+                <td>{this.getPlanetName(char)}</td>
+              </tr>
+            );
+
     return (
-      <table className="App-character-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Planet</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.state.people.map((char, index) =>
-            <tr key={char.name} className="border_bottom" onClick={()=>this.selectChar(index)}>
-              <td>{char.name}</td>
-              <td>{this.getPlanetName(char)}</td>
+      <div>
+        <input className="Search-box"
+               type="text"
+               name="searchBox"
+               value={this.state.search}
+               onChange={this.handleChange}
+               placeholder="Type here your favorite character"
+               autoFocus/>
+
+        <table className="Characters-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Planet</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

@@ -16,13 +16,7 @@ class App extends Component {
       <div className="App">
         <Header title={"Star Wars"}/>
         <div className="App-intro">
-        <br/>
-          <input className="App-search-box"
-                 type="text"
-                 name="searchBox"
-                 placeholder="Type here your favorite character"
-                 autoFocus/>
-
+          <br/>
           <CharactersTable peopleStore={peopleStore} planetStore={planetStore}/>
         </div>
       </div>

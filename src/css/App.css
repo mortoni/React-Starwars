@@ -33,21 +33,14 @@
   padding: 0% 5% 5% 5%;
 }
 
-.App-search-box {
+.Search-box {
   width: 200px;
   height: 28px;
   margin-bottom: 10px;
 }
 
-.App-character-table, .Details-character-table {
+.Characters-table, .Character-table {
   width: 100%;
-}
-
-.App-modal {
-  width: 450px;
-  height: 300px;
-  border: 1px solid black;
-  padding: 0% 5% 5% 5%;
 }
 
 @keyframes App-logo-spin {
@@ -74,37 +67,19 @@ thead tr:hover {
   background-color: transparent;
 }
 
-.details-box {
+.Character-box {
   border: 1px solid #61dafb;
   margin: 10px 0px 10px 0px;
   padding: 1%;
 }
 
-.details-footer {
+.Character-footer {
   margin-top: 10px;
 }
 
-.Details-character-table tbody tr:hover {
+.Character-table tbody tr:hover {
   cursor: default;
   background-color: transparent;
-}
-
-.content {
-  display: flex;
-  width: 100%;
-}
-
-.character-details, .character-comment-box {
-  border: 1px solid #61dafb;
-  margin: 2% 5%;
-  padding: 10px 15px;
-  text-align: left;
-  width: 40%;
-}
-
-.character-comment-box {
-  margin-left: 0%;
-  height: 150px;
 }
 
 .comment-box {
