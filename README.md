@@ -7,22 +7,16 @@ This project was bootstrapped with
 
 <img src="https://raw.githubusercontent.com/mortoni/React-Starwars/master/src/imgs/sw-mobile-screen.png" width="250" height="500" /> <img src="https://raw.githubusercontent.com/mortoni/React-Starwars/master/src/imgs/sw-mobile-screen-2.png" width="250" height="500" />
 
-### Desktop  
-
-![image](https://raw.githubusercontent.com/mortoni/React-Starwars/master/src/imgs/sw-desktop-screen.png)  
-![image](https://raw.githubusercontent.com/mortoni/React-Starwars/master/src/imgs/sw-desktop-screen-2.png)  
-
-##Technologies
-
+## Technologies
 [React](https://facebook.github.io/react/)  
 Redux  
 [React Flexbox Grid](https://roylee0704.github.io/react-flexbox-grid/)  
 
-##Running
+## Running
 
 Go to root folder of project, open your terminal and then follow steps:  
 
-###Development Server
+### Development Server
 
 - Installing dependencies:
 ```{r, engine='bash', count_lines}
